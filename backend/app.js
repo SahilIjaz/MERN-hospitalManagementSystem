@@ -1,3 +1,5 @@
+const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -11,4 +13,13 @@ app.use(
   })
 );
 
-module.exports = app;
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+module.exports = app;   
