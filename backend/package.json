@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "SET NODE_ENV=development& nodemon server.js",
+    "start_prod": "SET NODE_ENV=production& nodemon server.js"
+  },
+  "author": "Sahil Ijaz",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "cron": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "http": "^0.0.1-security",
+    "mongoose": "^8.12.1",
+    "path": "^0.12.7"
+  }
+}
