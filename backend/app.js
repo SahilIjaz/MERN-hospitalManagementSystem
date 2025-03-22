@@ -13,6 +13,8 @@ app.use(
   })
 );
 
+const messageRoutes = require("./routes/messageRoutes");
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,4 +24,7 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
-module.exports = app;   
+
+app.use("/api/v1/message", messageRoutes);
+
+module.exports = app;
