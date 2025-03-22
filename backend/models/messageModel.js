@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validators");
+const validator = require("validator");
 
 const messageSchema = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const messageSchema = new mongoose.Schema(
       validate: [validator.isEmail, "Plz! provide a valid email address."],
     },
     phoneNumber: {
-      typeNumber,
+      type: Number,
       minLength: [11, "Phone number should be 11 digits long."],
     },
     message: {

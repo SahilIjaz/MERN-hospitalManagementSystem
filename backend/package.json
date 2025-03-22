@@ -19,6 +19,8 @@
     "express-fileupload": "^1.5.1",
     "http": "^0.0.1-security",
     "mongoose": "^8.12.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "validator": "^13.12.0",
+    "validators": "^0.3.1"
   }
 }
