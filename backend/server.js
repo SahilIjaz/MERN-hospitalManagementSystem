@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 // const socketApi = require("./utils/socketsIo");
 
 const cors = require("cors");
-
+const cloudinary = require("cloudinary");
 app.use(cors());
 app.options("*", cors());
 
@@ -23,6 +23,12 @@ const port = process.env.PORT;
 const DB = process.env.MONGO_URL;
 
 console.log("DB IS : ", DB);
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 mongoose
   .connect(DB, { useNewUrlParser: true, useUnifiedTopology: true })
