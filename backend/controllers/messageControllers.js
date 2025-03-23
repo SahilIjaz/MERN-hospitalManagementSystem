@@ -28,5 +28,12 @@ exports.getOneMessage = catchAsync(async (req, res, next) => {
   });
 });
 
-
-exports.getAllMessages=catchAsync(async(req,res,next)=>{})
+exports.getAllMessages = catchAsync(async (req, res, next) => {
+  const messages = await Message.find();
+  return res.status(200).json({
+    message: "All messages found successfully.",
+    status: 200,
+    length: messages.length,
+    data: messages,
+  });
+});
