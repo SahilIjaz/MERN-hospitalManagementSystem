@@ -14,3 +14,19 @@ exports.createMessage = catchAsync(async (req, resizeBy, next) => {
     data: message,
   });
 });
+
+exports.getOneMessage = catchAsync(async (req, res, next) => {
+  const message = await Message.findById(req.params.id);
+  if (!message) {
+    return next(new appError("Requested message not fund.", 404));
+  }
+
+  return res.status(200).json({
+    message: "Requested message found successfully.",
+    status: 200,
+    data: message,
+  });
+});
+
+
+exports.getAllMessages=catchAsync(async(req,res,next)=>{})
