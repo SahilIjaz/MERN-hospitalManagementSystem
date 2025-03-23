@@ -37,3 +37,4 @@ exports.getAllMessages = catchAsync(async (req, res, next) => {
     data: messages,
   });
 });
+
