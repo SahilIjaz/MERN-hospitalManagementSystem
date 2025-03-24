@@ -38,3 +38,43 @@ exports.getAllMessages = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateMessage = catchAsync(async (req, res, next) => {
+  const message = await Message.findByIdAndUpdate(req.params.id, req.bdy, {
+    new: true,
+    runValidators: true,
+  });
+  if (!message) {
+    return next(new appError("Requested message was not updated.", 400));
+  }
+
+  return res.status(200).json({
+    message: "Requested message updated successfully.",
+    status: 200,
+    data: message,
+  });
+});
+
+exports.deleteMessage = catchAsync(async (req, res, next) => {
+  const message = await Message.findByIDAndDelete(req.params.id);
+
+  if (!message) {
+    return next(new appError("Requested message was not deleted.", 400));
+  }
+
+  return res.status(201).json({
+    message: "Requested message deleted successfully.",
+    status: 201,
+    data: null,
+  });
+});
+
+exports.deleteAllMessages = catchAsync(async (req, res, next) => {
+  const messages = await Message.deleteMany();
+
+  return res.status(201).json({
+    message: "All messages deleted successfully.",
+    status: 201,
+    deletedCount: messages.length,
+    data: null,
+  });
+});
