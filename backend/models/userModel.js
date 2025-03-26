@@ -4,10 +4,11 @@ const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
-    role: {
+    phoneNumber: {
       type: String,
-      enum: ["food-enthusiast", "chef", "farmer", "admin"],
-      required: [true, "Account type is required in user schema."],
+    },
+    country: {
+      type: String,
     },
     avatar: {
       type: String,
@@ -15,15 +16,41 @@ const userSchema = new mongoose.Schema(
     fullName: {
       type: String,
     },
+    location: {
+      type: {
+        type: String,
+        default: "Point",
+      },
+      coordinates: { type: [Number], default: [0.0, 0.0] },
+      address: String,
+      description: String,
+      country: {
+        type: String,
+      },
+    },
+    rating: {
+      type: Number,
+    },
+    numberOfReviews: {
+      type: Number,
+      default: 0,
+    },
+    totalRating: {
+      type: Number,
+      default: 0,
+    },
     email: {
       type: String,
-      required: [true, "Email is required."],
       unique: true,
-      validate: [validator.isEmail, "Plz ! provide a valid E-mail address."],
+      required: [true, "Email is required in user schema."],
+      validate: [validator.isEmail, "Provide correct email."],
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
       select: false,
     },
     confirmPassword: {
@@ -34,94 +61,15 @@ const userSchema = new mongoose.Schema(
         },
       },
     },
-    userName: {
-      type: String,
-      //   required: [true, "userName is required."],
-    },
-    location: {
-      type: {
-        type: String,
-        default: "point",
-      },
-      coordinates: { type: [Number], default: [0.0, 0.0] },
-      address: String,
-      description: String,
-    },
-
-    cuisinePreferences: [{ type: mongoose.Schema.Types.Mixed }],
-    dietaryRestrictions: [{ type: mongoose.Schema.Types.Mixed }],
-    // cuisinePreferences: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "CuisinePreferences",
-    //   },
-    // ],
-    // dietaryRestrictions: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "DietaryRestrictions",
-    //   },
-    // ],
-    cookingSkillLevel: {
-      type: String,
-      enum: ["beginner", "intermediate", "advanced"],
-    },
-    socialAccounts: [
-      {
-        name: {
-          type: String,
-          trim: true,
-        },
-        id: {
-          type: String,
-          trim: true,
-        },
-      },
-    ],
-    bio: {
+    preference: {
       type: String,
     },
-    achievements: [
-      {
-        achievementTitle: {
-          type: String,
-        },
-        achievementImage: {
-          type: [String],
-        },
-      },
-    ],
-    additionalInformation: {
-      description: {
-        type: String,
-      },
-      image: {
-        type: [String],
-      },
-    },
-    subscription: {
-      type: Boolean,
-      default: false,
-    },
-    subscriptionType: {
+    designation: {
       type: String,
-      default: "free",
     },
-    isProfileCompleted: {
-      type: Boolean,
-      default: false,
-    },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    isOnline: {
-      type: Boolean,
-      default: false,
-    },
-    isNotification: {
-      type: Boolean,
-      default: true,
+    role: {
+      type: String,
+      enum: ["admin", "patient", "doctor"],
     },
     otp: {
       type: Number,
@@ -129,7 +77,25 @@ const userSchema = new mongoose.Schema(
     otpExpiration: {
       type: Number,
     },
-    forgotVerification: {
+    serviceCharges: {
+      type: String,
+    },
+    medicalLicense: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    licenseVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    passwordResetPermission: {
       type: Boolean,
       default: false,
     },
@@ -137,30 +103,18 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    isActive: {
+    isNotification: {
+      type: Boolean,
+      default: true,
+    },
+    isProfileCompleted: {
       type: Boolean,
       default: false,
-    },
-    recipePoints: { type: Number, default: 0 },
-    coursePoints: { type: Number, default: 0 },
-    challengePoints: { type: Number, default: 0 },
-    recipes: { type: Number, default: 0 },
-    courses: { type: Number, default: 0 },
-    followers: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    following: {
-      type: Number,
-      default: 0,
-      min: 0,
     },
   },
   { timestamps: true }
 );
 
-//password encryption
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   try {
@@ -172,35 +126,23 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-//:::::::::::::::::pre hooks
 userSchema.pre(/^find/, function (next) {
-  // console.log("BEFORE CHECKING THE CONDITION");
-  // const isDeleted = this.getQuery().isDeleted;
-  // console.log('THE IS DELETED IS : ', isDeleted);
-  // if (isDeleted === true) {
-  //   console.log("THE UER HAS DELETED FIELD TRUE");
-  //   this.find({
-  //     isDeleted: true,
-  //   });
-  // } else {
-
-  if (this.getOptions().skipPreHook) {
-    return next();
-  } else {
-    this.find({
-      isDeleted: false,
-    });
-  }
-  // }
+  this.find({
+    $and: [{ isDeleted: false }],
+  });
   next();
 });
 
-//password checking
 userSchema.methods.checkPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+userSchema.pre(/^find/, function (next) {
+  next();
+});
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;
