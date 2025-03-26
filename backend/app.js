@@ -13,6 +13,7 @@ app.use(
   })
 );
 
+const homeRoutes = require("./routes/homeRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -27,6 +28,7 @@ app.use(
   })
 );
 
+app.use("/api/home", homeRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/message", messageRoutes);
