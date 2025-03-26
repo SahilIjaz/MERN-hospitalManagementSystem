@@ -13,8 +13,9 @@ app.use(
   })
 );
 
-const messageRoutes = require("./routes/messageRoutes");
+const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 app.use(cookieParser());
 app.use(express.json());
@@ -26,7 +27,8 @@ app.use(
   })
 );
 
-app.use("/api/v1/message", messageRoutes);
+app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/message", messageRoutes);
 
 module.exports = app;
