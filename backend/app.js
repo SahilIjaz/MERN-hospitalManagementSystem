@@ -14,6 +14,7 @@ app.use(
 );
 
 const messageRoutes = require("./routes/messageRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use(cookieParser());
 app.use(express.json());
@@ -26,5 +27,6 @@ app.use(
 );
 
 app.use("/api/v1/message", messageRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 module.exports = app;
