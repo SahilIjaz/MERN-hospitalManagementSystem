@@ -28,7 +28,7 @@ const appointmentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+console.log('hello')
 appointmentSchema.pre(/^find/, function (next) {
   this.populate({});
   next();
@@ -36,3 +36,4 @@ appointmentSchema.pre(/^find/, function (next) {
 
 const Appointment = new mongoose.model("Appointment", appointmentSchema);
 module.exports = Appointment;
+
